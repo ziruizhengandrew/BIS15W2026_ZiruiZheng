@@ -177,11 +177,11 @@ is.integer(my_numeric)
 
 Let's convert my_numeric to an integer.
 ```{r}
-my_integer <- as.integer(my_numeric) #important when work w/ plots
+my_numeric2 <- as.integer(my_numeric) #important when work w/ plots
 ```
 
 ```{r}
-is.integer(my_integer)
+is.integer(my_numeric2)
 ```
 
 ## Missing Data
