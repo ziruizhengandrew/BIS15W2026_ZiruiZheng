@@ -19,41 +19,43 @@ In order to answer the questions below, you will need to do a little online rese
 
 **1. Make three new vectors that show the name, height in feet, and height in meters of the five tallest mountains in the world.**
 ```{r}
-
+names <- c("Mount Everest", "K2", "Kangchenjunga","Lhotse","Makalu")
+height_feet <- c(29032, 28251, 28169, 27940, 27838)
+height_meter <- c(8849, 8611, 8586, 8516, 8485)
 ```
 
 **2. Combine these vectors into a data frame called `mountains`.**
 ```{r}
-
+mountains <- tibble(names, height_feet, height_meter)
 ```
 
 **3. What is the mean height of the mountains in feet?**
 ```{r}
-
+mean(mountains$height_feet)
 ```
 
 **4. When were each of these mountains first climbed (i.e. in what year)? Make a new vector `first_climbed` and add it to the `mountains` data frame.**
 ```{r}
-
+first_climbed <- c(1953, 1954, 1955, 1956, 1955)
 ```
 
 ```{r}
-
+mountains <- tibble(names, height_feet, height_meter, first_climbed)
 ```
 
 **5. How many times have each of these mountains been climbed? Make a new vector `summits` and add it to the `mountains` data frame.**
 ```{r}
-
+summits <- c(12884, 800, 532, 1000, 400)
 ```
 
 **6. Which mountain has the highest number of fatalities? Make a new vector `fatalities` and add it to the `mountains` data frame.**
 ```{r}
-
+fatalities <- c(340, 96, 52, 96, 22)
 ```
 
 **7. What is the fatality rate (i.e., fatalities divided by summits) for each mountain? Create a new vector `fatality_rate` and add it to the `mountains` data frame.**
 ```{r}
-
+fatality_
 ```
 
 **8. Write your data frame to a .csv file called `mountains_data`.**
