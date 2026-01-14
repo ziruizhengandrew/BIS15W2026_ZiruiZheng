@@ -1,6 +1,6 @@
 ---
 title: "Homework 3"
-author: "Your Name Here"
+author: "Zirui Zheng"
 date: "`r Sys.Date()`"
 output:
   html_document: 
@@ -36,45 +36,43 @@ mean(mountains$height_feet)
 
 **4. When were each of these mountains first climbed (i.e. in what year)? Make a new vector `first_climbed` and add it to the `mountains` data frame.**
 ```{r}
-first_climbed <- c(1953, 1954, 1955, 1956, 1955)
+mountains$first_climbed <- c(1953, 1954, 1955, 1956, 1955)
 ```
 
-```{r}
-mountains <- tibble(names, height_feet, height_meter, first_climbed)
-```
 
 **5. How many times have each of these mountains been climbed? Make a new vector `summits` and add it to the `mountains` data frame.**
 ```{r}
 summits <- c(12884, 800, 532, 1000, 400)
+mountains$summits <- summits
+
 ```
 
 **6. Which mountain has the highest number of fatalities? Make a new vector `fatalities` and add it to the `mountains` data frame.**
 ```{r}
 fatalities <- c(340, 96, 52, 96, 22)
+mountains$fatalities <- fatalities
 ```
 
 **7. What is the fatality rate (i.e., fatalities divided by summits) for each mountain? Create a new vector `fatality_rate` and add it to the `mountains` data frame.**
 ```{r}
-fatality_
+fatality_rate <- c(fatalities/summits)
+mountains$fatality_rate <- fatality_rate
 ```
 
 **8. Write your data frame to a .csv file called `mountains_data`.**
 ```{r}
-
+write.csv(mountains, "mountains_data.csv", row.names = FALSE)
 ```
 
 **9. Clear your environment panel by clicking on the broom icon. Then read in your `mountains_data.csv` file to a new object called `mountains`.**
 ```{r}
-
+mountains <- read.csv("mountains_data.csv")
 ```
 
-```{r}
-
-```
 
 **10. Use a summary function of your choice to show the structure of your `mountains` data frame.**
 ```{r}
-
+summary(mountains)
 ```
 
 ## Knit and Upload
