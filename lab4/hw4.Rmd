@@ -1,6 +1,6 @@
 ---
 title: "Homework 4"
-author: "Your Name Here"
+author: "Zirui Zheng"
 date: "`r Sys.Date()`"
 output:
   html_document: 
@@ -39,6 +39,7 @@ names(msleep)
 ggplot(data=msleep, mapping=aes(x=vore))+
   geom_bar(mapping = aes(fill=vore))
 ```
+Answer: Herbi is most represented in the data.
 
 **4. What is the average length of time that each mammal sleeps?**
 ```{r}
@@ -48,6 +49,7 @@ mean(msleep$sleep_total)
 ```{r}
 aggregate(sleep_total ~ vore, data = msleep, FUN=mean)
 ```
+Answer: The average length of time that mammal sleeps is 10.43373. Specifically, carni is 10.378947; herbi is 9.509375; insecti is 14.940000; omni is 10.925000
 
 **5. Use `summary()` to get a quick idea of the range of values for the variable `bodywt`.**
 ```{r}
@@ -61,7 +63,7 @@ names(msleep)
 
 ```{r}
 ggplot(data=msleep, mapping=aes(x=vore, y=bodywt))+
-  geom_boxplot(mapping=aes(fill= vore))+. # bar should not have y axis
+  geom_boxplot(mapping=aes(fill= vore))+ # bar should not have y axis
   scale_y_log10()+
   labs(title="Body weight by vore types")
 ```
@@ -81,7 +83,7 @@ ggplot(data=msleep, mapping = aes(x=vore, y=sleep_total))+
   geom_boxplot(mapping=aes(color=vore))+
   labs(title="Relationship between total sleep time and vore type")
 ```
-
+Answer: 
 **9. Is there a relationship between brain weight and body weight? Build a plot to support your answer.**
 ```{r}
 names(msleep)
@@ -98,7 +100,9 @@ ggplot(data=msleep, mapping = aes(x=bodywt, y=brainwt))+
 
 **10. Build one plot of your choice that provides additional insight into the msleep dataset. Be sure to include appropriate labels and a title.**
 ```{r}
-
+ggplot(data=msleep, mapping = aes(x=vore, y=sleep_rem))+
+  geom_boxplot(mapping=aes(color=vore))+
+  labs(title="Relationship between Rem sleep and vore type")
 ```
 
 ## Knit and Upload
