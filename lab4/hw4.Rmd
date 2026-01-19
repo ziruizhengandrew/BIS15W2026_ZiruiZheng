@@ -37,7 +37,8 @@ names(msleep)
 **3. Make a plot that shows the number of mammals in each vore type. Which vore type is most represented in the data?**
 ```{r}
 ggplot(data=msleep, mapping=aes(x=vore))+
-  geom_bar(mapping = aes(fill=vore))
+  geom_bar(mapping = aes(fill=vore))+
+  labs(title = "Number of mammals in each vore type")
 ```
 Answer: Herbi is most represented in the data.
 
