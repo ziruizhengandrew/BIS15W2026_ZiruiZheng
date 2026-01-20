@@ -75,7 +75,7 @@ ggplot(data=msleep, mapping = aes(x=bodywt, y=sleep_total))+
   geom_point(mapping = aes(color=vore))+
   geom_smooth(method = lm,se=T)+
   scale_x_log10()+
-  labs(title="Relationship between body weight and total sleep time")
+  labs(title="Relationship between body weight in log10 and total sleep time")
 ```
 
 **8. Which vore type tends to sleep the most? Build a plot to support your answer.**
@@ -96,7 +96,7 @@ ggplot(data=msleep, mapping = aes(x=bodywt, y=brainwt))+
   geom_smooth(method = lm,se=T)+
   scale_x_log10()+
   scale_y_log10()+
-  labs(title="Relationship between brain weight and body weight")
+  labs(title="Relationship between brain weight in log10 and body weight in log10")
 ```
 
 **10. Build one plot of your choice that provides additional insight into the msleep dataset. Be sure to include appropriate labels and a title.**
