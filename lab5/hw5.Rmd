@@ -37,7 +37,8 @@ glimpse(homerange)
 
 **3. Which animal groups are represented in the data? Make a plot that shows the number in each class.**
 ```{r}
-ggplot(data=homerange, mapping=aes(x=class))+
+homerange %>%
+  ggplot(mapping=aes(x=class))+
   geom_bar(mapping=aes(fill=class))+
   labs(title="Numbers in each animal group")
 ```
@@ -50,6 +51,7 @@ Answer: Mammalia is most represented.
   labs(title="Numbers in carnivores or herbivores")
 ```
 Answer: More carnivores represented in the data
+
 **5. Which herbivorous mammals have homeranges greater than 1,000,000 m²? Show only the common name, order, mean homerange size, and mean body mass. Arrange the data in descending order by homerange size and show only the top 10 species.**
 ```{r}
 homerange %>% 
@@ -79,7 +81,7 @@ names(homerange)
 
 ```{r}
 homerange %>% 
-  select(trophic.guild,species, mean.hra.m2) %>% 
+  select(trophic.guild,species, common.name, family, mean.hra.m2) %>% 
   filter(trophic.guild =="carnivore") %>% 
   slice_max(mean.hra.m2, n=1)
 
@@ -88,24 +90,23 @@ Answer: Jubatus of carnivorous mammals have the largest homeranges
 
 **8. Is there a relationship between body mass and homerange size? Make a scatterplot to show this relationship. Be sure to include appropriate labels and a title.**
 ```{r}
-ggplot(data = homerange, mapping = aes(x=mean.mass.g, y=mean.hra.m2))+
+homerange %>% 
+  ggplot(mapping = aes(x=log10.mass, y=log10.hra))+
   geom_point(mapping = aes(color=trophic.guild))+
   geom_smooth(method = lm,se=T)+
-    scale_x_log10()+
-  scale_y_log10()+
-   labs(title = "Body Mass in log10 (g) vs. Homerange Size in log10 (m^2)")
+  labs(title = "Body Mass in log10 (g) vs. Homerange Size in log10 (m^2)")
 ```
 Answer: there is a positive relationship between body mass and home range size
 
 **9. Use filter to extract the data for only birds and mammals. Then make a plot that compares the homerange sizes of these two groups. Be sure to include appropriate labels and a title.**
 ```{r}
 homerange %>% 
-  select(taxon, mean.hra.m2)%>% 
+  select(taxon, log10.hra)%>% 
   filter(taxon== "birds" | taxon== "mammals")%>% 
-  ggplot(mapping=aes(x = taxon, y=mean.hra.m2))+
+  ggplot(mapping=aes(x = taxon, y=log10.hra))+
   geom_boxplot(mapping=aes(fill=taxon))+
-    scale_y_log10()+
   labs(title="Home Range Size in log10 (m^2) by birds and mammals")
+
 ```
 
 **10. Do one additional exploratory analysis of your choice. Before writing the code, write the question you are trying to answer. The question should be biologically meaningful and appropriate for the data. It must include at least one `filter()`, `select()`, and `arrange()`.**
@@ -113,7 +114,7 @@ homerange %>%
 names(homerange)
 ```
 
-## 10. Use filter to extract the data for only aves and mammalia. Then make a plot that compares the homerange sizes of these two groups. Please sort the data by homerange sizes in descending order.
+## 10. Use filter to extract the data for only aves and mammalia. Then compares the homerange sizes of these two groups. Please sort the data by homerange sizes in descending order.
 ```{r}
 homerange %>% 
   select(class, mean.hra.m2)%>% 
