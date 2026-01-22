@@ -86,7 +86,7 @@ homerange %>%
   slice_max(mean.hra.m2, n=1)
 
 ```
-Answer: Jubatus of carnivorous mammals have the largest homeranges
+Answer: cheetah of carnivorous mammals have the largest homeranges
 
 **8. Is there a relationship between body mass and homerange size? Make a scatterplot to show this relationship. Be sure to include appropriate labels and a title.**
 ```{r}
