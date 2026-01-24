@@ -114,7 +114,7 @@ penguins %>%
 We use `across()` within `mutate()` to apply a function to multiple columns. This is especially helpful when cleaning data. For example, let's say we want to convert all columns that end with `mm` to centimeters. We can use `across()` to do this.
 ```{r}
 penguins %>% 
-  mutate(across(ends_with("mm"),~./10)) %>% ##~?
+  mutate(across(ends_with("mm"),~./10)) %>% 
   select(species, bill_length_cm=bill_length_mm,bill_depth_cm=bill_depth_mm,flipper_length_cm=flipper_length_mm)
 ```
 
