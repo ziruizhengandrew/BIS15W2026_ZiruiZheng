@@ -35,34 +35,37 @@ summary(amniota)
 miss_var_summary(amniota)
 ```
 
-```{r}
-names(amniota)
-```
 
 2. Make any necessary replacements in the data such that all NA's appear as "NA". 
 ```{r}
-amniota_NA <- amniota %>% 
+amniota_na <- amniota %>% 
   replace_with_na_all(condition = ~ .x %in% c(-999, "", "NA"))
 ```
 
 3. How many total NA's are in the data set? Use the package `naniar` to produce a summary, including percentages, of missing data in each column for the `amniota` data.
 ```{r}
-amniota_NA %>% 
+amniota_na %>% 
   miss_var_summary()
 ```
 
 4. Double check your replacement using `summary`. Do you see any other potential issues? If so, fix them.
 ```{r}
-amniota_NA <- amniota_NA %>% 
- replace_with_na(replace = list(female_maturity_d= -30258.7, adult_body_mass_g= 0, no_sex_body_mass_g = 0, birth_or_hatching_weight_g=0.000e+00)) 
+amniota_na <- amniota_na %>% 
+  mutate(
+    female_maturity_d = ifelse(female_maturity_d < 0, NA, female_maturity_d),
+    
+    birth_or_hatching_weight_g = na_if(birth_or_hatching_weight_g, 0), # the data from summary shows the rounding, thus we would see 0 from the table
+    no_sex_body_mass_g = na_if(no_sex_body_mass_g, 0), # the data from summary shows the rounding, thus we would see 0 from the table
+    adult_body_mass_g = na_if(adult_body_mass_g, 0)  # the data from summary shows the rounding, thus we would see 0 from the table
+  )
 ```
 
 ```{r}
-summary(amniota_NA)
+summary(amniota_na)
 ```
 5. Use `naniar` to visualize the number of NA's in each variable. Which variables have the most NA's?
 ```{r}
-amniota_NA %>% 
+amniota_na %>% 
   gg_miss_var()
 ```
 ```{r}
@@ -71,14 +74,12 @@ amniota_NA %>%
 
 6. Calculate the number of NAs in the `egg_mass_g` column sorted by taxonomic class; i.e. how many NA's are present in the `egg_mass_g` column in birds, mammals, and reptiles? Does this results make sense biologically? How do these results affect your interpretation of NA's?
 ```{r}
-amniota_NA %>% 
+amniota_na %>% 
   group_by(class) %>% 
-  summarize(
-    total_species = n(),
-    egg_mass_NA = sum(is.na(egg_mass_g))
-  ) %>% 
-  arrange(desc(egg_mass_NA))
+  summarize(total_species = n(), egg_mass_na = sum(is.na(egg_mass_g))) %>% 
+  arrange(desc(egg_mass_na))
 ```
+
 ```{r}
 ## Answer: Yes. Mammals generally do not lay eggs, so we expected that egg_mass_NA mostly align with total_species. Birds all lay eggs, so the NAs in birds likely represent missing data . Reptiles also lay eggs，though some give live birth, so the high number of NAs in reptiles suggests substantial missing data.
 ```
