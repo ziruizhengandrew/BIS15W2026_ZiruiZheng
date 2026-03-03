@@ -165,7 +165,7 @@ common_na_numbers
 
 ```{r}
 life_history %>% 
-  replace_with_na_all(condition = ~.x %in% c(common_na_numbers, common_na_strings)) %>% 
+  replace_with_na_all(condition = ~.x %in% c(common_na_numbers, common_na_strings)) %>% ## 用这个
   mutate(newborn=na_if(newborn, "not measured"))
 ```
 

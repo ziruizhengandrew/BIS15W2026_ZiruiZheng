@@ -77,6 +77,8 @@ heartrate_longer <- heartrate %>%
   pivot_longer(-patient,
                names_to = "drug",
                values_to = "heartrate")
+
+heartrate_longer
 ```
 
 ```{r}
@@ -175,12 +177,13 @@ qpcr_tidy <- qpcr_untidy %>%
     values_to = "mRNA_expression"
   )
   
+qpcr_tidy
 ```
 
 
 ```{r}
 qpcr_tidy %>% 
-  separate(experiment, into=c("experiment", "e_number"), sep=3) %>% 
+  separate(experiment, into=c("experiment", "e_number"), sep=3) %>%           ##第三位分割
   separate(replicate, into = c("rep","r_number"),sep=3) %>% 
   select(gene, experiment=e_number, replicate=r_number, 'mRNA_expression')
 ```

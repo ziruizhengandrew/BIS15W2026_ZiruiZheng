@@ -48,7 +48,7 @@ gapminder %>%
   summarize(n_distinct(country))
 ```
 
-3. Which five countries have had the largest absolute population growth between 1925-2025? Show this as a table.
+3. Which five countries have had the largest absolute population growth betw2een 1925-2025? Show this as a table.
 ```{r}
 pop_growth <- gapminder %>%
   filter(year %in% c(1925, 2025)) %>%

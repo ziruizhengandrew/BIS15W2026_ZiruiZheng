@@ -42,7 +42,7 @@ glimpse(sydneybeaches)
 ```{r}
 sydneybeaches_long <- sydneybeaches %>%
   select(Site, Date, Enterococci..cfu.100ml.)
-
+sydneybeaches_long
 ```
 
 4. Pivot the data such that the dates are column names and each beach only appears once (wide format). Name the object `sydneybeaches_wide`
@@ -52,6 +52,7 @@ sydneybeaches_wide <- sydneybeaches_long %>%
     names_from = Date,
     values_from = 'Enterococci..cfu.100ml.',
   )
+sydneybeaches_wide
 ```
 
 5. Pivot the data back so that the dates are data and not column names.
@@ -107,8 +108,7 @@ sydneybeaches_long %>%
   separate(Date, into = c("day", "month", "year"), sep = "/") %>%
   filter(year == 2013) %>%
   group_by(Site, year) %>%
-  summarise(mean_enterococci = mean(Enterococci..cfu.100ml., na.rm = TRUE),
-            .groups = "drop") %>%
+  summarise(mean_enterococci = mean(Enterococci..cfu.100ml., na.rm = TRUE), .groups = "drop") %>%
   slice_max(mean_enterococci, n = 1)
 
 ```
