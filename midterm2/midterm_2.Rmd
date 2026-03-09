@@ -83,14 +83,13 @@ summary(polar_bears)
 
 
 ```{r}
-polar_bears_1 <- polar_bears %>% 
-  replace_with_na_all(condition = ~ .x %in% c(-999, "", "unknown","NA")) 
+polar_bears <- polar_bears %>% 
+  replace_with_na_all(condition = ~ .x %in% c("unknown"))
 ```
 
 ```{r}
-polar_bears_1 %>% 
-  gg_miss_var()
-
+gg_miss_var(polar_bears)
+miss_var_summary(polar_bears)
 ```
 
 ```{r}
@@ -99,16 +98,21 @@ polar_bears_1 %>%
 
 3. (6 points) Is sampling even for both sexes? Make a count the shows the number of males and females sampled by population and make a plot to visualize the counts.
 ```{r}
+polar_bears_1 <- polar_bears %>% 
+  count(popn, sex)
+
+```
+
+```{r}
 polar_bears_1 %>% 
-  group_by(popn, sex) %>% 
-  summarise(number_of_samples=n(), .groups = 'keep') %>% 
-  arrange(popn) %>% 
-  ggplot(aes(x=popn, y=number_of_samples, fill= sex))+
-  geom_col(alpha=0.8,position="dodge")+
-  labs(title="Numbers of samples from each sex in each population", 
-       x=NULL, 
-       y="n")+
-  coord_flip()
+  ggplot(aes(x = popn, y = n, fill = sex)) +
+  geom_col(position = "dodge") +
+  labs(
+    title = "Number of Bears Sampled by Sex and Population",
+    x = "Population",
+    y = "Number of Sample"
+  ) +
+  theme_minimal()
 ```
 
 ```{r}
@@ -117,40 +121,31 @@ polar_bears_1 %>%
 
 4. (6 points) How many bears were sampled in each year for both populations? Make a line plot(s) to visualize sampling by year for both populations. (hint: you will need to pull apart the date to get the year in its own column)
 ```{r}
-polar_bears_1 %>% 
-  separate(capture_date, into = c("year","month","day"), sep = "-") %>%
-  filter(popn == "SB") %>% 
-  group_by(year) %>% 
-  summarise(n = n()) %>%
-  ggplot(aes(x=reorder(year, n), y=n)) +
-  geom_col(fill = "#0099f9", alpha=0.8)+
-  labs(title="Numbers of bears were sampled in each year for SB", 
-       x=NULL, 
-       y="n") +
-  theme(axis.text.x = element_text(angle = 60, hjust = 1),
-        plot.title = element_text(size = 14, face="bold"))+
-  geom_text(aes(label = n), vjust = -0.2, size = 3, color = "black")
+polar_bears <- polar_bears %>%
+ mutate(year_capture = year(capture_date))
+
+count_1 <- polar_bears  %>%
+ count(popn, year_capture)
+
+count_1
 ```
 
+
 ```{r}
-polar_bears_1 %>% 
-  separate(capture_date, into = c("year","month","day"), sep = "-") %>%
-  filter(popn == "CS") %>% 
-  group_by(year) %>% 
-  summarise(n = n()) %>%
-  ggplot(aes(x=reorder(year, n), y=n)) +
-  geom_col(fill = "#0099f9", alpha=0.8)+
-  labs(title="Numbers of bears were sampled in each year for CS", 
-       x=NULL, 
-       y="n") +
-  theme(axis.text.x = element_text(angle = 60, hjust = 1),
-        plot.title = element_text(size = 14, face="bold"))+
-  geom_text(aes(label = n), vjust = -0.2, size = 3, color = "black")
+
+count_1 %>% 
+  ggplot(aes(x = year_capture, y = n, color = popn)) +
+  geom_line() +
+  geom_point() +
+  labs(title = "Sampling of Polar Bears by Year", x = "Year", y = "Number of Samples of Bears") +
+  theme_minimal()
+
 ```
+
 
 5. (2 points) What are the min, median, mean, and max values for `urea_nitrogen` and `creatinine`?
 ```{r}
-polar_bears_1 %>% 
+polar_bears %>% 
   select(urea_nitrogen,creatinine) %>% 
   summarize(
     across(
@@ -158,10 +153,8 @@ polar_bears_1 %>%
       list(
         mean   = ~mean(.x, na.rm = TRUE),
         median = ~median(.x, na.rm = TRUE),
-        sd     = ~sd(.x, na.rm = TRUE),
         min    = ~min(.x, na.rm = TRUE),
-        max    = ~max(.x, na.rm = TRUE),
-        n      = ~sum(!is.na(.x))
+        max    = ~max(.x, na.rm = TRUE)
       )
     )
   )
@@ -172,36 +165,33 @@ summary(polar_bears)
 
 6. (3 points) As explained above, the ratio of `urea_nitrogen` to `creatinine` is used as an index of fasting. To calculate the ratio, we need to multiply `urea_nitrogen` by 0.466, then divide by `creatinine`. Create a new variable called `un_creat_ratio` that contains this calculation.
 ```{r}
-polar_bears_1$un_creat_ratio = polar_bears_1$urea_nitrogen * 0.466 / polar_bears_1$creatinine
+polar_bears$un_creat_ratio = polar_bears$urea_nitrogen * 0.466 / polar_bears$creatinine
 ```
 
 
 7. (4 points) The authors of the study categorized bears as fasting if their `un_creat_ratio` was less than or equal to 10. Use `case_when()` to create a new variable called `fasting` that categorizes bears as fasting or not.
 ```{r}
-polar_bears_1 %>% 
- mutate(fasting_state = case_when( un_creat_ratio<= 10 ~ "fasting",
-                                   un_creat_ratio > 10 ~ "not fasting"))%>% 
-  select(bear_id, un_creat_ratio, fasting_state) %>% 
-  mutate(fasting_state = factor(fasting_state, levels=c("fasting","not fasting")))
+polar_bears <- polar_bears %>%
+  mutate(
+    fasting = case_when(
+      un_creat_ratio <= 10 ~ "Fasting",
+      un_creat_ratio > 10 ~ "Not Fasting"
+    )
+  )
 
 ```
 
 8. (6 points) The authors found that the number of fasting bears increased in the SB population but decreased in the CS population. Make a plot(s) that shows the number of fasting bears by year for both populations to visualize this trend.
 ```{r}
-#polar_bears_1 %>% 
-#  separate(capture_date, into = c("year","month","day"), sep = "-") %>%
-#  mutate(year_capture=as.factor(year))
+fasting_year <- polar_bears %>%
+  filter(fasting == "Fasting") %>%
+  count(popn, year_capture)
 
-#   mutate(fasting_state = case_when( un_creat_ratio<= 10 ~ "fasting",
- #                                  un_creat_ratio > 10 ~ "not fasting"))%>% 
-#  select(bear_id, un_creat_ratio, fasting_state) %>% 
-#  mutate(fasting_state = factor(fasting_state, levels=c("fasting","not fasting"))) %>% 
-# summarise(n = n(as.factor(fasting_state))) %>%
-#  ggplot(aes(x=year, y=n(fasting_state))) +
-#  geom_density(fill = "#0099f9", alpha=0.8)+
-#  labs(title="Numbers of bears were sampled in each year for SB", 
-#       x=NULL, 
-#       y="n") 
+ggplot(fasting_year, aes(x = year_capture, y = n, color = popn)) +
+  geom_line() +
+  geom_point() +
+  labs( title = "Number of Fasting Polar Bears by Year", x = "Year", y = "Number of Fasting Bears") +
+  theme_minimal()
   
 ```
 
@@ -211,13 +201,14 @@ polar_bears %>%
   select(lat, long) %>% 
   summary()
 ```
+
 ```{r}
 lat_p <- c(62.46,72.70)
 long_p <- c(-172.2,-134.8 )
 bbox <-make_bbox(long_p,lat_p,f=0.03)
 map2 <- get_stadiamap(bbox, maptype = "stamen_terrain", zoom = 7)
 ggmap(map2)+
-  geom_point(data = polar_bears, mapping = aes(long, lat), size = 0.75, color = "steelblue", alpha = 0.6)+
+  geom_point(data = polar_bears, mapping = aes(long, lat, color = popn), size = 0.75, alpha = 0.6)+
   labs(x="Longitude", y="Latitude", title="Polar bear location")
 ```
 
@@ -236,9 +227,9 @@ ui <- fluidPage(
 server <- function(input, output, session) {
     output$plot <- renderPlot({
     
-      polar_bears_1 %>% 
-      ggplot(aes(x=.data[[input$x]] , y=un_creat_ratio))+
-      geom_boxplot(fill = "steelblue", alpha = 0.75)+
+      polar_bears %>% 
+      ggplot(aes(x=.data[[input$x]] , y=un_creat_ratio, fill = popn))+
+      geom_boxplot(alpha = 0.75)+
       labs(title = "Variables by Un_creat_ratio")+
       theme_minimal()
     
